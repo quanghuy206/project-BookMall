@@ -4,7 +4,6 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-
 import LoginPage from './pages/login';
 import ContactPage from './pages/contact';
 import BookPage from './pages/book';
