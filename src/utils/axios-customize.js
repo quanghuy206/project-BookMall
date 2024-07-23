@@ -3,9 +3,10 @@ const baseURL = import.meta.env.VITE_BACKEND_URL;
 
 const instance = axios.create({
     baseURL: baseURL,
+    withCredentials:true
   });
 
-
+  instance.defaults.headers.common = {'Authorization': `bearer ${localStorage.getItem('access_token')}`}
   // Add a request interceptor
 instance.interceptors.request.use(function (config) {
     // Do something before request is sent
@@ -17,11 +18,8 @@ instance.interceptors.request.use(function (config) {
 
 // Add a response interceptor
 instance.interceptors.response.use(function (response) {
-    console.log("response",response);
-    console.log("response_data",response.data);
     return response && response.data ? response.data : response ;
   }, function (error) {
-    console.log(error.response);
     return error?.response?.data ?? Promise.reject(error)
   });
 
