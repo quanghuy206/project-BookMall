@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { FaReact } from 'react-icons/fa'
 import { FiShoppingCart } from 'react-icons/fi';
-import { Divider, Badge, Drawer } from 'antd';
+import { Divider, Badge, Drawer, message } from 'antd';
 import './header.scss';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
 import { useNavigate } from 'react-router';
 import { AiFillShopping } from "react-icons/ai";
+import { callFetchLogoutAccount } from '../../services/api';
+import { doLogoutAccountAction } from '../../redux/account/accountSlice';
 
 
 
@@ -15,8 +17,19 @@ const Header = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
     const isAuthenticated = useSelector(state => state.account.isAuthenticated);
     const user = useSelector(state => state.account.user);
-    console.log(user);
     const navigate = useNavigate();
+    const dispatch = useDispatch()
+
+    const handleLogout = async () => {
+        const res = await callFetchLogoutAccount();
+        console.log(res);
+        if(res && res.data){
+            
+            dispatch(doLogoutAccountAction());
+            message.success("Đăng xuất thành công")
+            navigate("/")
+        }
+    }
 
     const items = [
         {
@@ -24,7 +37,7 @@ const Header = () => {
             key: 'account',
         },
         {
-            label: <label >Đăng xuất</label>,
+            label: <label onClick={handleLogout}>Đăng xuất </label>,
             key: 'logout',
         },
 
@@ -87,7 +100,7 @@ const Header = () => {
                 <p>Quản lý tài khoản</p>
                 <Divider />
 
-                <p>Đăng xuất</p>
+                <p >Đăng xuất</p>
                 <Divider />
             </Drawer>
         </>
