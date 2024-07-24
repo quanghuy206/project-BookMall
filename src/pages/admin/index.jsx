@@ -1,9 +1,5 @@
 const AdminPage = () => {
-    return (
-        <>
-            AdminPage
-        </>
-    )
+    return (<>Admin Page</>)
 }
 
 export default AdminPage

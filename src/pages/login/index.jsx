@@ -23,7 +23,6 @@ const LoginPage = () => {
             navigate('/')
         }
         else{
-            console.log(res);
             notification.error({
                 message:"Có lỗi xảy ra",
                 description:res.message && Array.isArray(res.message) ? res.message[0] : res.message
