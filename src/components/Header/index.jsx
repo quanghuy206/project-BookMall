@@ -14,7 +14,7 @@ import { doLogoutAccountAction } from '../../redux/account/accountSlice';
 
 
 const Header = () => {
-  const [openDrawer, setOpenDrawer] = useState(false);
+    const [openDrawer, setOpenDrawer] = useState(false);
     const isAuthenticated = useSelector(state => state.account.isAuthenticated);
     const user = useSelector(state => state.account.user);
     const navigate = useNavigate();
@@ -23,8 +23,8 @@ const Header = () => {
     const handleLogout = async () => {
         const res = await callFetchLogoutAccount();
         console.log(res);
-        if(res && res.data){
-            
+        if (res && res.data) {
+
             dispatch(doLogoutAccountAction());
             message.success("Đăng xuất thành công")
             navigate("/")
@@ -43,9 +43,9 @@ const Header = () => {
 
     ];
 
-  return (
-    <>
-          <div className='header-container'>
+    return (
+        <>
+            <div className='header-container'>
                 <header className="page-header">
                     <div className="page-header__top">
                         <div className="page-header__toggle" onClick={() => {
@@ -53,7 +53,7 @@ const Header = () => {
                         }}>☰</div>
                         <div className='page-header__logo'>
                             <span className='logo'>
-                                <AiFillShopping  className='rotate icon-react' /> Ecommer
+                                <AiFillShopping className='rotate icon-react' /> Ecommer
                             </span>
                             <input
                                 className="input-search" type={'text'}
@@ -105,7 +105,7 @@ const Header = () => {
             </Drawer>
         </>
 
-  )
+    )
 }
 
 export default Header

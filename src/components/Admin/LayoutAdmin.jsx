@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-    AppstoreOutlined,
+  AppstoreOutlined,
   BookOutlined,
   BorderOutlined,
   DesktopOutlined,
@@ -10,77 +10,92 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Breadcrumb, Divider, Dropdown, Layout, Menu, Space, theme } from 'antd';
-import { Link } from 'react-router-dom';
+import { Breadcrumb, Divider, Dropdown, Layout, Menu, message, Space, theme } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
 import './Admin.scss'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { doLogoutAccountAction } from '../../redux/account/accountSlice';
+import { callFetchLogoutAccount } from '../../services/api';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const items = [
-    {
-        label: <Link to='/admin'>Dashboard</Link>,
-        key: 'dashboard',
-        icon: <AppstoreOutlined />
+  {
+    label: <Link to='/admin'>Dashboard</Link>,
+    key: 'dashboard',
+    icon: <AppstoreOutlined />
 
-    },
-    {
-        label:<Link>Manarger User</Link>,
-        key:'managerUser',
-        icon:<UserOutlined/>,
-        children:[{
-            label:<Link>User1</Link>
-        }
-        ]
-    },
-    {
-        label: <Link to='/admin/book'>Manager Book</Link>,
-        key: 'book',
-        icon: <BookOutlined />
-
-    },
-    {
-        label: <Link to='/admin/order'>Manager Order</Link>,
-        key: 'order',
-        icon: <BorderOutlined />
-
+  },
+  {
+    label: <Link>Manarger User</Link>,
+    key: 'managerUser',
+    icon: <UserOutlined />,
+    children: [{
+      label: <Link>User1</Link>
     }
- 
-  ]
-const itemsDropdown = [
-    {
-        label: <label>Quản lý tài khoản</label>,
-        key: 'account',
-    },
-    {
-        label: <label >Đăng xuất</label>,
-        key: 'logout',
-    },
+    ]
+  },
+  {
+    label: <Link to='/admin/book'>Manager Book</Link>,
+    key: 'book',
+    icon: <BookOutlined />
 
-];
+  },
+  {
+    label: <Link to='/admin/order'>Manager Order</Link>,
+    key: 'order',
+    icon: <BorderOutlined />
+
+  }
+
+]
+
 
 const LayoutAdmin = () => {
-    const [collapsed, setCollapsed] = useState(false);
-    const [activeMenu, setActiveMenu] = useState('dashboard');
-    const user = useSelector(state => state.account.user);
 
+  const [collapsed, setCollapsed] = useState(false);
+  const [activeMenu, setActiveMenu] = useState('dashboard');
+  const user = useSelector(state => state.account.user);
+  const navigate = useNavigate()
+  const dispatch = useDispatch();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-  
+
+  const handleLogout = async () => {
+    const res = await callFetchLogoutAccount();
+    console.log(res);
+    if (res && res.data) {
+      dispatch(doLogoutAccountAction())
+      message.success("Đăng xuất thành công")
+      navigate("/")
+    }
+  }
+
+  const itemsDropdown = [
+    {
+      label: <label>Quản lý tài khoản</label>,
+      key: 'account',
+    },
+    {
+      label: <label onClick={() => handleLogout()}>Đăng xuất</label>,
+      key: 'logout',
+    },
+
+  ];
   return (
     <Layout
       style={{
         minHeight: '100vh',
       }}
-      
+
     >
       <Sider
         theme="light"
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}>
-            <div className='title-header-dashboard'>Hello</div>
+        <div className='title-header-dashboard'>Hello</div>
         <Menu
           theme="light"
           defaultSelectedKeys={['1']}
@@ -90,14 +105,14 @@ const LayoutAdmin = () => {
       </Sider>
       <Layout>
         <div className='admin-header'>
-        <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
-                        <a onClick={(e) => e.preventDefault()}>
-                            <Space>
-                                Welcome {user?.fullName}
-                                <DownOutlined />
-                            </Space>
-                        </a>
-                    </Dropdown>
+          <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
+            <a onClick={(e) => e.preventDefault()}>
+              <Space>
+                Welcome {user?.fullName}
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
 
         </div>
         <Content

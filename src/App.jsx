@@ -20,28 +20,17 @@ import NotFound from './components/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
 import LayoutAdmin from './components/Admin/LayoutAdmin';
 import AdminPage from './pages/admin';
+
 const Layout = () => {
   return (
     <div className='layout-app'>
       <Header />
-      {/* <Outlet />
-      <Footer /> */}
+      <Outlet />
+      <Footer />
     </div>
   )
 }
-// const LayoutAdmin = () => {
-//   const isAdminRoute = window.location.pathname.startsWith('/admin');
-//   const user = useSelector(state => state.account.user)
-//   const userRole = user.role
-//   return (
-//     <div className='layout-app'>
-//       {isAdminRoute && userRole ==="ADMIN" && <Header />}
-//       {/* <Header /> */}
-//       <Outlet />
-//       {isAdminRoute && userRole ==="ADMIN" && <Footer />}
-//     </div>
-//   )
-// }
+
 
 export default function App() {
   const dispatch = useDispatch()
@@ -50,7 +39,7 @@ export default function App() {
   const getAccount = async () => {
     if (window.location.pathname === "/login"
       || window.location.pathname === "/register"
-      )
+    )
       return;
 
     const res = await callFetchAccount()
@@ -116,10 +105,10 @@ export default function App() {
   return (
     <>
       {
-        isLoading === false 
-        || window.location.pathname === "/login"
-        || window.location.pathname === "/register" 
-        ||window.location.pathname === "/" 
+        isLoading === false
+          || window.location.pathname === "/login"
+          || window.location.pathname === "/register"
+          || window.location.pathname === "/"
           ?
           <RouterProvider router={router} />
           :
