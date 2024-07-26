@@ -24,7 +24,6 @@ const Header = () => {
         const res = await callFetchLogoutAccount();
         console.log(res);
         if (res && res.data) {
-
             dispatch(doLogoutAccountAction());
             message.success("Đăng xuất thành công")
             navigate("/")
@@ -37,7 +36,7 @@ const Header = () => {
             key: 'account',
         },
         {
-            label: <label onClick={handleLogout}>Đăng xuất </label>,
+            label: <label onClick={() => handleLogout()}>Đăng xuất </label>,
             key: 'logout',
         },
 

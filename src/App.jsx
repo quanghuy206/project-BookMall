@@ -20,6 +20,7 @@ import NotFound from './components/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
 import LayoutAdmin from './components/Admin/LayoutAdmin';
 import AdminPage from './pages/admin';
+import ManagerUserTable from './components/Admin/User/UserTable';
 
 const Layout = () => {
   return (
@@ -49,7 +50,7 @@ export default function App() {
   }
   useEffect(() => {
     getAccount();
-  }, [])
+  }, [window.location.pathname,dispatch])
 
   const router = createBrowserRouter([
     {
@@ -82,13 +83,21 @@ export default function App() {
             </ProtectedRoute>
         },
         {
+          path:"user",
+           element:
+            <ProtectedRoute>
+              <ManagerUserTable/>
+            </ProtectedRoute>
+        },
+        {
           path: "contact",
           element: <ContactPage />
         },
         {
           path: "book",
           element: <AdminPage />
-        }
+        },
+       
       ]
 
     },
@@ -114,7 +123,6 @@ export default function App() {
           :
           <Loading />
       }
-      {/* <RouterProvider router={router} /> */}
     </>
   )
 }

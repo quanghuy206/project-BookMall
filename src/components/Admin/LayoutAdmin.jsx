@@ -11,7 +11,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { Breadcrumb, Divider, Dropdown, Layout, Menu, message, Space, theme } from 'antd';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import './Admin.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { doLogoutAccountAction } from '../../redux/account/accountSlice';
@@ -28,10 +28,10 @@ const items = [
   },
   {
     label: <Link>Manarger User</Link>,
-    key: 'managerUser',
+    // key: 'managerUser',
     icon: <UserOutlined />,
     children: [{
-      label: <Link>User1</Link>
+      label: <Link to="/admin/user">CRUD</Link>
     }
     ]
   },
@@ -115,29 +115,8 @@ const LayoutAdmin = () => {
           </Dropdown>
 
         </div>
-        <Content
-          style={{
-            margin: '0 16px',
-          }}
-        >
-          <Breadcrumb
-            style={{
-              margin: '16px 0',
-            }}
-          >
-            <Breadcrumb.Item>User huy</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            Bill is a cat.
-          </div>
+        <Content>
+         <Outlet/>
         </Content>
 
         <Footer

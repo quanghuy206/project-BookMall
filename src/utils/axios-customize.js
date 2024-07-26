@@ -8,6 +8,7 @@ const instance = axios.create({
 
 instance.defaults.headers.common = { 'Authorization': `bearer ${localStorage.getItem('access_token')}` }
 // Add a request interceptor
+
 instance.interceptors.request.use(function (config) {
   // Do something before request is sent
   return config;
@@ -28,18 +29,30 @@ const NO_RETRY_HEADER = 'x-no-retry'
 instance.interceptors.response.use(function (response) {
   return response && response.data ? response.data : response;
 }, async function (error) {
-  // Xử lý refresh token khi gặp lỗi 401 (Unauthorized) và xử lý retry khi có token mới trong trường hợp API trả về mã lỗi 401 tránh loop vô hạn
-  if (error.config && error.response && +error.response.status === 401 && !error.config.headers[NO_RETRY_HEADER]) { 
+  console.log(error.config);
+  // Xử lý token hết hạn  khi gặp lỗi 401 (Unauthorized) và xử lý refresh_token khi có token mới trong trường hợp API trả về mã lỗi 401 tránh loop vô hạn
+  if (error.config && error.response
+    && +error.response.status === 401
+    && !error.config.headers[NO_RETRY_HEADER]
+  ) {
     const access_token = await handleRefreshToken();
     error.config.headers[NO_RETRY_HEADER] = 'true'
     if (access_token) {
-      // Gán lại token mới vào headers của yêu cầu ban đầu
       error.config.headers['Authorization'] = `Bearer ${access_token}`;
-      localStorage.setItem('access_token', access_token);
-      // Thực hiện lại yêu cầu ban đầu với token mới
+      localStorage.setItem('access_token', access_token)
       return instance.request(error.config);
     }
   }
+
+  if (
+    error.config && error.response
+    && +error.response.status === 400
+    && error.config.url === '/api/v1/auth/refresh'
+  ) {
+    window.location.href = '/login';
+  }
+
+
 
   return error?.response?.data ?? Promise.reject(error)
 });
