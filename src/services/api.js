@@ -16,4 +16,6 @@ export const callFetchAccount = () => {
 export const callFetchLogoutAccount = () => {
    return axios.post('/api/v1/auth/logout')
 }
-
+export const callFetchAllUser = (query) => {
+   return axios.get(`/api/v1/user?${query}`)
+}

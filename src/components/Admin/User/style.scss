@@ -1,0 +1,39 @@
+.header {
+    padding: 30px;
+    background: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 30px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+
+    .action-button {
+        margin-right: 8px; // Khoảng cách giữa các nút
+
+        &:last-child {
+            margin-right: 0; // Loại bỏ khoảng cách bên phải cho nút cuối cùng
+        }
+    }
+}
+
+.table-container {
+    overflow-x: auto; // Thêm cuộn ngang nếu bảng quá rộng
+}
+
+// Responsive styles
+@media (max-width: 576px) { // Kích thước màn hình nhỏ hơn hoặc bằng 576px (iPhone SE)
+    .action-buttons {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .action-button {
+            margin-right: 0;
+            margin-bottom: 8px; // Khoảng cách dưới cho các nút
+        }
+    }
+}
