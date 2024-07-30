@@ -1,17 +1,14 @@
-import React, { useState } from 'react';
-import { FaReact } from 'react-icons/fa'
+import React, { useEffect, useState } from 'react';
 import { FiShoppingCart } from 'react-icons/fi';
-import { Divider, Badge, Drawer, message } from 'antd';
+import { Divider, Badge, Drawer, message, Dropdown, Space,Avatar } from 'antd';
 import './header.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { DownOutlined } from '@ant-design/icons';
-import { Dropdown, Space } from 'antd';
+import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import { AiFillShopping } from "react-icons/ai";
 import { callFetchLogoutAccount } from '../../services/api';
 import { doLogoutAccountAction } from '../../redux/account/accountSlice';
-
-
+import { Link } from 'react-router-dom';
 
 const Header = () => {
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -29,8 +26,7 @@ const Header = () => {
             navigate("/")
         }
     }
-
-    const items = [
+    let items = [
         {
             label: <label>Quản lý tài khoản</label>,
             key: 'account',
@@ -41,6 +37,14 @@ const Header = () => {
         },
 
     ];
+    if (user?.role === 'ADMIN') {
+        items.splice(1, 0, {
+            label: <Link to='/admin'>Trang quản trị</Link>,
+            key: 'admin',
+        });
+    }
+
+    const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user.avatar}`
 
     return (
         <>
@@ -79,7 +83,8 @@ const Header = () => {
                                     <Dropdown menu={{ items }} trigger={['click']}>
                                         <a onClick={(e) => e.preventDefault()}>
                                             <Space>
-                                                Welcome {user?.fullName}
+                                            <Avatar size={35} src={urlAvatar} />
+                                                 {user?.fullName}
                                                 <DownOutlined />
                                             </Space>
                                         </a>

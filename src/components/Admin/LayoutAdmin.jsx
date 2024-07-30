@@ -10,7 +10,7 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Breadcrumb, Divider, Dropdown, Layout, Menu, message, Space, theme } from 'antd';
+import { Avatar, Breadcrumb, Divider, Dropdown, Layout, Menu, message, Space, theme } from 'antd';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import './Admin.scss'
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,9 +58,6 @@ const LayoutAdmin = () => {
   const user = useSelector(state => state.account.user);
   const navigate = useNavigate()
   const dispatch = useDispatch();
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
 
   const handleLogout = async () => {
     const res = await callFetchLogoutAccount();
@@ -72,7 +69,7 @@ const LayoutAdmin = () => {
     }
   }
 
-  const itemsDropdown = [
+  let itemsDropdown = [
     {
       label: <label>Quản lý tài khoản</label>,
       key: 'account',
@@ -83,6 +80,16 @@ const LayoutAdmin = () => {
     },
 
   ];
+
+  if (user?.role === 'ADMIN') {
+    itemsDropdown.splice(1, 0, {
+      label: <Link to='/'>Trang chủ</Link>,
+      key: 'admin',
+    });
+
+  }
+  const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user.avatar}`
+
   return (
     <Layout
       style={{
@@ -108,7 +115,8 @@ const LayoutAdmin = () => {
           <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
             <a onClick={(e) => e.preventDefault()}>
               <Space>
-                Welcome {user?.fullName}
+                <Avatar size={35} src={urlAvatar} />
+                {user?.fullName}
                 <DownOutlined />
               </Space>
             </a>
@@ -116,7 +124,7 @@ const LayoutAdmin = () => {
 
         </div>
         <Content>
-         <Outlet/>
+          <Outlet />
         </Content>
 
         <Footer
