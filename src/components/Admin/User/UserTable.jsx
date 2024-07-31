@@ -8,6 +8,7 @@ import { RetweetOutlined } from '@ant-design/icons';
 import UserDetail from './UserDetail';
 import UserModalCreate from './UserModalCreate';
 import moment from 'moment';
+import UserImport from './data/UserImport';
 
 const UserTable = () => {
     const [listUser, setListUser] = useState([]);
@@ -22,6 +23,7 @@ const UserTable = () => {
     const [openViewDetail, setOpenViewDetail] = useState(false)
     const [dataViewDetail, setDataViewDetail] = useState(null)
     const [isOpenModalAddUser, setIsOpenModalAddUser] = useState(false)
+    const [isOpenModalImport, setIsOpenModalImport] = useState(false)
     const columns = [
         {
             title: 'Id',
@@ -57,7 +59,7 @@ const UserTable = () => {
             title: 'Ngày tạo',
             dataIndex: 'createdAt',
             sorter: true,
-            render:(text,record,index) => {
+            render: (text, record, index) => {
                 return (
                     <>{moment(record.createdAt).format('DD-MM-YYYY, h:mm:ss')}</>
                 )
@@ -121,7 +123,12 @@ const UserTable = () => {
             {/* Action Table */}
             <div className="action-buttons">
                 <Button type="primary" style={{ marginRight: 8 }}>Export</Button>
-                <Button type="primary" style={{ marginRight: 8 }}>Import</Button>
+                <Button type="primary"
+                    style={{ marginRight: 8 }}
+                    onClick={() => setIsOpenModalImport(true)}
+                >
+                    Import
+                </Button>
                 <Button type="primary"
                     style={{ marginRight: 8 }}
                     onClick={() => setIsOpenModalAddUser(true)}
@@ -175,6 +182,11 @@ const UserTable = () => {
                 fetchUser={fetchUser}
             />
 
+            {/* Modal Import */}
+            <UserImport
+                isOpenModalImport={isOpenModalImport}
+                setIsOpenModalImport={setIsOpenModalImport}
+            />
         </>
     );
 };

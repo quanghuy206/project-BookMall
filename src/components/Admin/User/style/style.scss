@@ -9,31 +9,31 @@
     display: flex;
     justify-content: flex-end;
     margin-right: 30px;
-    margin-bottom: 16px;
+    margin-bottom: 40px;
     flex-wrap: wrap;
 
     .action-button {
-        margin-right: 8px; // Khoảng cách giữa các nút
+        margin-right: 8px; 
 
         &:last-child {
-            margin-right: 0; // Loại bỏ khoảng cách bên phải cho nút cuối cùng
+            margin-right: 0; 
         }
     }
 }
 
 .table-container {
-    overflow-x: auto; // Thêm cuộn ngang nếu bảng quá rộng
+    overflow-x: auto; //
 }
 
 // Responsive styles
-@media (max-width: 576px) { // Kích thước màn hình nhỏ hơn hoặc bằng 576px (iPhone SE)
+@media (max-width: 576px) { 
     .action-buttons {
         flex-direction: column;
         align-items: flex-start;
 
         .action-button {
             margin-right: 0;
-            margin-bottom: 8px; // Khoảng cách dưới cho các nút
+            margin-bottom: 8px; 
         }
     }
 }
