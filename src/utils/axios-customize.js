@@ -29,7 +29,6 @@ const NO_RETRY_HEADER = 'x-no-retry'
 instance.interceptors.response.use(function (response) {
   return response && response.data ? response.data : response;
 }, async function (error) {
-  console.log(error.config);
   // Xử lý token hết hạn  khi gặp lỗi 401 (Unauthorized) và xử lý refresh_token khi có token mới trong trường hợp API trả về mã lỗi 401 tránh loop vô hạn
   if (error.config && error.response
     && +error.response.status === 401

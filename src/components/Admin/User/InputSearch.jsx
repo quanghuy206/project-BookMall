@@ -30,7 +30,7 @@ const InputSearch = (props) => {
         }
     };
 
-    const onReset = () => {
+    const onReset =async () => {
         form.resetFields();
     };
 

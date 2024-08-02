@@ -21,6 +21,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LayoutAdmin from './components/Admin/LayoutAdmin';
 import AdminPage from './pages/admin';
 import ManagerUserTable from './components/Admin/User/UserTable';
+// import ManagerBookTable from './components/Admin/Book/BookTable'
 
 const Layout = () => {
   return (
@@ -50,7 +51,7 @@ export default function App() {
   }
   useEffect(() => {
     getAccount();
-  }, [window.location.pathname,dispatch])
+  }, [window.location.pathname, dispatch])
 
   const router = createBrowserRouter([
     {
@@ -83,10 +84,10 @@ export default function App() {
             </ProtectedRoute>
         },
         {
-          path:"user",
-           element:
+          path: "user",
+          element:
             <ProtectedRoute>
-              <ManagerUserTable/>
+              <ManagerUserTable />
             </ProtectedRoute>
         },
         {
@@ -95,9 +96,12 @@ export default function App() {
         },
         {
           path: "book",
-          element: <AdminPage />
+          element:
+            <ProtectedRoute>
+              {/* <ManagerBookTable /> */}
+            </ProtectedRoute>
         },
-       
+
       ]
 
     },

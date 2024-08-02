@@ -102,7 +102,7 @@ const LayoutAdmin = () => {
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}>
-        <div className='title-header-dashboard'>Hello</div>
+        <div className='title-header-dashboard'>ADMIN</div>
         <Menu
           theme="light"
           defaultSelectedKeys={['1']}
