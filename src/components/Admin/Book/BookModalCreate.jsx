@@ -1,6 +1,6 @@
-import { Col, Form, Input, InputNumber, Modal, Row, Select, Space, Upload } from 'antd'
+import { Col, Form, Input, InputNumber, message, Modal, notification, Row, Select, Space, Upload } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { callGetCategoryBook, callUploadBookImg } from '../../../services/api';
+import { callCreateBook, callGetCategoryBook, callUploadBookImg } from '../../../services/api';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import Loading from '../../Loading/index'
 const BookModalCreate = (props) => {
@@ -11,22 +11,53 @@ const BookModalCreate = (props) => {
 
     const [previewImage, setPreviewImage] = useState('');
     const [previewOpen, setPreviewOpen] = useState(false)
-    const [previewTitle,setPreviewTitle] = useState("")
+    const [previewTitle, setPreviewTitle] = useState("")
     const [loadingSlider, setLoadingSlider] = useState(false);
     const [imageUrl, setImageUrl] = useState("");
     //state Image Thumbnail - Slider
-    const [imgThumbnail, setImgThumbnail] = useState([]);
-    const [imgSlider, setImgSlider] = useState([]);
+    const [dataThumbnail, setDataThumbnail] = useState([]);
+    const [dataSlider, setDataSlider] = useState([]);
 
     //set Form when click OK without using form
     const [form] = Form.useForm();
 
-    const onFinish = (values) => {
-        console.log('Success:', values);
-        console.log('imgThumbnail:', imgThumbnail);
-        console.log('imgSlider:', imgSlider);
+    //Add Book
+    const onFinish = async (values) => {
+        if (dataThumbnail.length === 0) {
+            notification.error({
+                message: "Lỗi hình ảnh",
+                description: "Vui lòng upload ảnh thumbnail"
+            })
+            return;
+        }
+        if (dataSlider.length === 0) {
+            notification.error({
+                message: "Lỗi hình ảnh",
+                description: "Vui lòng upload ảnh slider"
+            })
+            return;
+        }
+        const { mainText, author, price, sold, quantity, category } = values;
+        const thumbnail = dataThumbnail[0].name;
+        const slider = dataSlider.map(item => item.name);
+        const res = await callCreateBook(thumbnail, slider, mainText, author, price, sold, quantity, category);
+        if (res && res.data) {
+            message.success('Tạo mới book thành công');
+            form.resetFields();
+            setDataSlider([]);
+            setDataThumbnail([])
+            setOpenModalAddBook(false);
+            await props.fetchBook()
+        } else {
+            notification.error({
+                message: 'Đã có lỗi xảy ra',
+                description: res.message
+            })
+        }
+
     };
 
+    //Get Category in Add Book to show Option Category
     useEffect(() => {
         const fetchCategory = async () => {
             const res = await callGetCategoryBook()
@@ -54,6 +85,7 @@ const BookModalCreate = (props) => {
         return isJpgOrPng && isLt2M;
     };
 
+    //
     const getBase64 = (img, callback) => {
         const reader = new FileReader();
         reader.addEventListener('load', () => callback(reader.result));
@@ -74,13 +106,15 @@ const BookModalCreate = (props) => {
         }
     };
 
+    //Call API upload image to server
     const handleUploadFileThumbnail = async ({ file, onSuccess, onError }) => {
         const res = await callUploadBookImg(file)
         if (res && res.data) {
-            setImgThumbnail({
+
+            setDataThumbnail([{
                 name: res.data.fileUploaded,
                 uid: file.uid
-            })
+            }])
             onSuccess("ok");
         }
         else {
@@ -90,7 +124,7 @@ const BookModalCreate = (props) => {
     const handleUploadFileSlider = async ({ file, onSuccess, onError }) => {
         const res = await callUploadBookImg(file)
         if (res && res.data) {
-            setImgSlider((dataSlider) => [...dataSlider, {
+            setDataSlider((dataSlider) => [...dataSlider, {
                 name: res.data.fileUploaded,
                 uid: file.uid
             }])
@@ -103,6 +137,7 @@ const BookModalCreate = (props) => {
 
     //Preview Image
     const handlePreview = async (file) => {
+
         getBase64(file.originFileObj, (url) => {
             setPreviewImage(url)
             setPreviewOpen(true);
@@ -112,23 +147,32 @@ const BookModalCreate = (props) => {
     };
 
     //Remove Image in Modal
-    const handleRemove = (file,type) => {
-        if(type === "thumbnail"){
-            setImgThumbnail([])
+    const handleRemove = (file, type) => {
+        if (type === "thumbnail") {
+            setDataThumbnail([])
         }
-        if(type === "slider")
-        {
-            const newSliderImg = imgSlider.filter(x => x.uid !== file.uid)
-            setImgSlider(newSliderImg)
+        if (type === "slider") {
+            const newSliderImg = dataSlider.filter(x => x.uid !== file.uid)
+            setDataSlider(newSliderImg)
         }
+    }
+
+    //Cancle Modal
+    const handleCancle = () => {
+        form.resetFields();
+        setDataThumbnail([])
+        setDataSlider([])
+        setOpenModalAddBook(false)
     }
     return (
         <>
-            <Modal title="Basic Modal"
+            <Modal title="Thêm mới sách"
                 width={"70vw"}
                 open={openModalAddBook}
                 onOk={() => { form.submit() }}
-                onCancel={() => setOpenModalAddBook(false)}
+                okText="Thêm mới"
+                cancelText="Hủy"
+                onCancel={() => handleCancle()}
             >
                 <Form
                     form={form}
@@ -148,7 +192,7 @@ const BookModalCreate = (props) => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your username!',
+                                        message: 'Vui lòng điền tên sách',
                                     },
                                 ]}
                             >
@@ -163,7 +207,7 @@ const BookModalCreate = (props) => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your username!',
+                                        message: 'Vui lòng điền tác giả',
                                     },
                                 ]}
                             >
@@ -178,7 +222,7 @@ const BookModalCreate = (props) => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your username!',
+                                        message: 'Vui lòng điền giá tiền',
                                     },
                                 ]}
                             >
@@ -196,12 +240,12 @@ const BookModalCreate = (props) => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your username!',
+                                        message: 'Vui lòng điền thể loại',
                                     },
                                 ]}
                             >
                                 <Select
-                                    defaultValue={listCategory[0]}
+                                    defaultValue="Lựa chọn"
                                     options={listCategory}
                                 />
                             </Form.Item>
@@ -214,14 +258,14 @@ const BookModalCreate = (props) => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your username!',
+                                        message: 'Vui lòng điền số lượng',
                                     },
                                 ]}
                             >
                                 <InputNumber
                                     min={0}
                                     style={{ width: '100%' }}
-
+                                    defaultValue={0}
                                 />
 
                             </Form.Item>
@@ -234,11 +278,11 @@ const BookModalCreate = (props) => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your username!',
+                                        message: 'Vui lòng điền số lượng đã bán',
                                     },
                                 ]}
                             >
-                                <Input />
+                                <InputNumber min={0} defaultValue={0} style={{ width: '100%' }} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -257,7 +301,7 @@ const BookModalCreate = (props) => {
                                     beforeUpload={beforeUpload}
                                     onChange={handleChange}
                                     onPreview={handlePreview}
-                                    onRemove={(file) => handleRemove(file,"thumbnail")}
+                                    onRemove={(file) => handleRemove(file, "thumbnail")}
                                 >
                                     <div>
                                         {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -282,7 +326,7 @@ const BookModalCreate = (props) => {
                                     beforeUpload={beforeUpload}
                                     onChange={(info) => handleChange(info, 'slider')}
                                     onPreview={handlePreview}
-                                    onRemove={(file) => handleRemove(file,"slider")}
+                                    onRemove={(file) => handleRemove(file, "slider")}
                                 >
                                     <div>
                                         {loadingSlider ? <LoadingOutlined /> : <PlusOutlined />}
@@ -300,10 +344,9 @@ const BookModalCreate = (props) => {
                 open={previewOpen}
                 footer={null}
                 onCancel={() => setPreviewOpen(false)}
-                width={800}
                 title={previewTitle}
             >
-                <img src={previewImage}  alt="Exam" style={{ width: "100%", height: "100%" }} />
+                <img src={previewImage} alt="Exam" style={{ width: "100%", height: "100%" }} />
             </Modal>
 
         </>

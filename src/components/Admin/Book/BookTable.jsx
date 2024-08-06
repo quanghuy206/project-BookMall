@@ -7,6 +7,7 @@ import { DeleteTwoTone, EditTwoTone, RetweetOutlined } from "@ant-design/icons";
 import Loading from "../../Loading";
 import BookDetail from "./BookDetail";
 import BookModalCreate from "./BookModalCreate";
+// import BookModalUpdate from "./BookModalUpdate";
 
 
 const BookTable = () => {
@@ -25,6 +26,8 @@ const BookTable = () => {
     const [openViewDetail, setOpenViewDetail] = useState(false)
     const [dataViewDetail, setDataViewDetail] = useState(null)
     const [openModalAddBook, setOpenModalAddBook] = useState(false)
+    const [openModalUpdate, setOpenModalUpdate] = useState(false)
+    const [dataUpdate,setDataUpdate] = useState(null)
 
     const columns = [
         {
@@ -93,10 +96,10 @@ const BookTable = () => {
                     </Popconfirm>
                     <EditTwoTone
                         twoToneColor="#f57800" style={{ cursor: "pointer", fontSize: 20 }}
-                    // onClick={() => {
-                    //     setIsOpenModalUpdate(true);
-                    //     setDataRecord(record)
-                    // }}
+                        onClick={() => {
+                            setOpenModalUpdate(true);
+                            setDataUpdate(record)
+                        }}
                     />
 
                 </div>
@@ -228,6 +231,13 @@ const BookTable = () => {
                     setOpenModalAddBook={setOpenModalAddBook}
                     fetchBook={fetchBook}
                 />
+                {/* <BookModalUpdate
+                    openModalUpdate={openModalUpdate}
+                    setOpenModalUpdate={setOpenModalUpdate}
+                    dataUpdate={dataUpdate}
+                    setDataUpdate={setDataUpdate}
+                    fetchBook={fetchBook}
+                /> */}
             </Row>
         </>
     )
