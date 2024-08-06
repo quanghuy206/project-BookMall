@@ -27,7 +27,7 @@ const items = [
 
   },
   {
-    label: <Link>Manarger User</Link>,
+    label: <span>Manage Users</span>,
     // key: 'managerUser',
     icon: <UserOutlined />,
     children: [{

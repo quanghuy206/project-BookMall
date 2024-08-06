@@ -1,70 +1,61 @@
-import React from 'react';
-import { Button, Col, Form, Input, Row, theme } from 'antd';
+import { Button, Col, Form, Input, Row } from 'antd'
+import React from 'react'
 
 const InputSearch = (props) => {
-    const { token } = theme.useToken();
     const [form] = Form.useForm();
-
-    const formStyle = {
-        maxWidth: '100%',
-        padding: 24,
-        backgroundColor: token.colorBgContainer, // Sử dụng màu nền từ theme
-        borderRadius: 8,
-        boxShadow: `0 2px 8px ${token.colorShadow}`, // Thêm bóng cho form
-    };
-
-    const onFinish = (values) => {
-        let query = "";
-        if (values.fullName) {
-            query += `&fullName=/${values.fullName}/i`;
-        }
-        if (values.email) {
-            query += `&email=/${values.email}/i`;
-        }
-        if (values.phone) {
-            query += `&phone=/${values.phone}/i`;
-        }
-        if (query) {
-            props.handleSearch(query);
-        }
-    };
-
-    const onReset =async () => {
+    const onReset = async () => {
         form.resetFields();
+    };
+   
+    const onFinish = (values) => {
+        console.log(values);
+        
+        let query ="";
+        if(values && values.mainText){
+            query +=`&mainText=/${values.mainText}/i`
+        }
+        if(values && values.author){
+            query +=`&author=/${values.author}/i`
+        }
+        if(values && values.category){
+            query +=`&category=/${values.category}/i`
+        }
+        if(query){
+            props.handleSearch(query)
+        }
     };
 
     return (
         <Form
             form={form}
             name="advanced_search"
-            style={formStyle}
             onFinish={onFinish}
             layout="vertical"
         >
             <Row gutter={24}>
                 <Col xs={24} sm={12} md={8}>
                     <Form.Item
-                        label="Tên"
-                        name="fullName"
+                        label="Tên sách"
+                        name="mainText"
                         labelCol={{ span: 24 }}
                     >
-                        <Input placeholder='Điền Tên' />
+                        <Input placeholder='Điền tên sách' />
                     </Form.Item>
                 </Col>
                 <Col xs={24} sm={12} md={8}>
                     <Form.Item
-                        label="Email"
-                        name="email"
+                        label="Tác giả"
+                        name="author"
                     >
-                        <Input placeholder='Điền Email' />
+                        <Input placeholder='Điền tên tác giả' />
                     </Form.Item>
                 </Col>
                 <Col xs={24} sm={12} md={8}>
                     <Form.Item
-                        label="Số Điện Thoại"
-                        name="phone"
+                        label="Thể loại"
+                        name="category"
                     >
-                        <Input placeholder='Điền số điện thoại' />
+                        <Input placeholder='Điền thể loại' />
                     </Form.Item>
                 </Col>
             </Row>
@@ -79,7 +70,7 @@ const InputSearch = (props) => {
                 </Col>
             </Row>
         </Form>
-    );
+    )
 }
 
-export default InputSearch;
+export default InputSearch

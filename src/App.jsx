@@ -21,7 +21,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LayoutAdmin from './components/Admin/LayoutAdmin';
 import AdminPage from './pages/admin';
 import ManagerUserTable from './components/Admin/User/UserTable';
-// import ManagerBookTable from './components/Admin/Book/BookTable'
+import ManagerBookTable from './components/Admin/Book/BookTable'
 
 const Layout = () => {
   return (
@@ -98,7 +98,7 @@ export default function App() {
           path: "book",
           element:
             <ProtectedRoute>
-              {/* <ManagerBookTable /> */}
+              <ManagerBookTable />
             </ProtectedRoute>
         },
 

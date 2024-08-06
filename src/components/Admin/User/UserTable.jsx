@@ -131,6 +131,7 @@ const UserTable = () => {
         if (sortQuery) {
             query += `&${sortQuery}`;
         }
+
         const res = await callFetchAllUser(query);
         if (res && res?.data) {
             setListUser(res.data.result);
@@ -149,10 +150,10 @@ const UserTable = () => {
             message.success("xóa thành công")
             await fetchUser()
         }
-        else{
+        else {
             notification.error({
-                message:"Có lỗi xảy ra",
-                description:res.message
+                message: "Có lỗi xảy ra",
+                description: res.message
             })
         }
     }
@@ -259,6 +260,7 @@ const UserTable = () => {
                 setIsOpenModalImport={setIsOpenModalImport}
                 fetchUser={fetchUser}
             />
+            {/* Update user */}
             <UserModalUpdate isOpenModalUpdate={isOpenModalUpdate}
                 setIsOpenModalUpdate={setIsOpenModalUpdate}
                 dataRecord={dataRecord}

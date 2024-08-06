@@ -16,20 +16,21 @@ const UserModalUpdate = (props) => {
             setIsOpenModalUpdate(false)
             await props.fetchUser();
         }
-        else{
+        else {
             notification.error({
-                message:"Có lỗi xảy ra",
-                description:res.message
+                message: "Có lỗi xảy ra",
+                description: res.message
             })
         }
     };
-   
+
     useEffect(() => {
         form.setFieldsValue(dataRecord)
     }, [dataRecord])
 
     return (
         <Modal title="Basic Modal"
+            forceRender
             open={isOpenModalUpdate}
             onCancel={() => setIsOpenModalUpdate(false)}
             onOk={() => { form.submit() }}
