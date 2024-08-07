@@ -8,8 +8,6 @@ const InputSearch = (props) => {
     };
    
     const onFinish = (values) => {
-        console.log(values);
-        
         let query ="";
         if(values && values.mainText){
             query +=`&mainText=/${values.mainText}/i`

@@ -103,14 +103,8 @@ const BookModalUpdate = (props) => {
         const {_id, mainText, author, price, sold, quantity, category } = values;
         const thumbnail = dataThumbnail[0].name;
         const slider = dataSlider.map(item => item.name);
-        console.log(values);
-        
-        console.log(thumbnail);
-        console.log(slider);
-        
         const res = await callUpdateBook(_id,thumbnail,slider,mainText,author,price,sold,quantity,category)
         if (res && res.data) {
-            console.log(res);
             message.success('Cập nhật thành công');
             form.resetFields();
             setDataSlider([]);

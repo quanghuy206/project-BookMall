@@ -61,7 +61,6 @@ const LayoutAdmin = () => {
 
   const handleLogout = async () => {
     const res = await callFetchLogoutAccount();
-    console.log(res);
     if (res && res.data) {
       dispatch(doLogoutAccountAction())
       message.success("Đăng xuất thành công")

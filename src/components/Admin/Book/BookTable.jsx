@@ -122,7 +122,6 @@ const BookTable = () => {
 
         if (filter) {
             query += filter
-            console.log("filter", query);
         }
         if (sortQuery) {
             query += `&${sortQuery}`
@@ -135,7 +134,6 @@ const BookTable = () => {
         setIsLoading(false);
     }
     const onChange = (pagination, filters, sorter) => {
-        console.log("sorter", sorter);
         if (pagination && pagination.current !== current) {
             setCurrent(pagination.current)
         }
