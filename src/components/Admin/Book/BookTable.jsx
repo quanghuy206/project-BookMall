@@ -1,14 +1,14 @@
-import { Button, Col, Popconfirm, Row, Table } from "antd";
+import { Button, Col, message, notification, Popconfirm, Row, Table } from "antd";
 import { useEffect, useState } from "react";
-import { callFetchListBook } from "../../../services/api";
+import { callDeleteBook, callFetchListBook } from "../../../services/api";
 import InputSearch from "./InputSearch";
 import moment from "moment";
 import { DeleteTwoTone, EditTwoTone, RetweetOutlined } from "@ant-design/icons";
 import Loading from "../../Loading";
 import BookDetail from "./BookDetail";
 import BookModalCreate from "./BookModalCreate";
-// import BookModalUpdate from "./BookModalUpdate";
-
+import BookModalUpdate from "./BookModalUpdate";
+import * as XLSX from 'xlsx';
 
 const BookTable = () => {
 
@@ -26,8 +26,10 @@ const BookTable = () => {
     const [openViewDetail, setOpenViewDetail] = useState(false)
     const [dataViewDetail, setDataViewDetail] = useState(null)
     const [openModalAddBook, setOpenModalAddBook] = useState(false)
+
+    //State Modal Update
     const [openModalUpdate, setOpenModalUpdate] = useState(false)
-    const [dataUpdate,setDataUpdate] = useState(null)
+    const [dataUpdate, setDataUpdate] = useState(null)
 
     const columns = [
         {
@@ -90,7 +92,7 @@ const BookTable = () => {
                         okText="Xác nhận"
                         cancelText="Hủy"
                         trigger="click"
-                    // onConfirm={() => handleDeleteUser(record._id)}
+                        onConfirm={() => handleDeleteBook(record._id)}
                     >
                         <DeleteTwoTone style={{ cursor: "pointer", fontSize: 20 }} />
                     </Popconfirm>
@@ -151,21 +153,29 @@ const BookTable = () => {
         setFilter(query)
     }
 
+    const handleDeleteBook = async (id) => {
+        const res = await callDeleteBook(id)
+        if (res && res.data) {
+            message.success("Xóa thành công")
+            fetchBook()
+        }
+        else {
+            notification.error({
+                title: "Có lỗi xảy ra ",
+                description: res.message
+            })
+        }
+    }
     const renderHeader = () => {
         return (
             <div className="action-buttons" style={{ display: "flex", marginBottom: "30px", marginTop: "30px" }}>
                 <Button type="primary"
                     style={{ marginRight: 8 }}
-                // onClick={() => handleExport()}
+                    onClick={() => handleExport()}
                 >
                     Export
                 </Button>
-                <Button type="primary"
-                    style={{ marginRight: 8 }}
-                // onClick={() => setIsOpenModalImport(true)}
-                >
-                    Import
-                </Button>
+
 
                 <Button type="primary"
                     style={{ marginRight: 8 }}
@@ -186,6 +196,22 @@ const BookTable = () => {
                 </Button>
             </div>
         )
+    }
+
+    const handleExport = () => {
+
+        if (listBook.length > 0) {
+            const arrayBook = listBook.map(item => {
+                delete item.slider;
+                delete item.thumbnail;
+                return item
+               
+            })
+            const worksheet = XLSX.utils.json_to_sheet(arrayBook);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+            XLSX.writeFile(workbook, "ExportBooks.xlsx");
+        }
     }
     return (
         <>
@@ -231,13 +257,13 @@ const BookTable = () => {
                     setOpenModalAddBook={setOpenModalAddBook}
                     fetchBook={fetchBook}
                 />
-                {/* <BookModalUpdate
+                <BookModalUpdate
                     openModalUpdate={openModalUpdate}
                     setOpenModalUpdate={setOpenModalUpdate}
                     dataUpdate={dataUpdate}
                     setDataUpdate={setDataUpdate}
                     fetchBook={fetchBook}
-                /> */}
+                />
             </Row>
         </>
     )

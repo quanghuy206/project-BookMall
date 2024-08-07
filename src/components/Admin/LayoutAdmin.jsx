@@ -91,12 +91,7 @@ const LayoutAdmin = () => {
   const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user.avatar}`
 
   return (
-    <Layout
-      style={{
-        minHeight: '100vh',
-      }}
-
-    >
+    <Layout style={{ minHeight: '100vh',}} >
       <Sider
         theme="light"
         collapsible
