@@ -126,13 +126,16 @@ const UserTable = () => {
         setIsLoading(true);
         let query = `current=${current}&pageSize=${pageSize}`;
         if (filter) {
-            query += `&${filter}`;
+            // query += `&${filter}`;
+             query = `current=1&pageSize=5/${filter}`
         }
         if (sortQuery) {
             query += `&${sortQuery}`;
         }
 
         const res = await callFetchAllUser(query);
+        console.log(query);
+        
         if (res && res?.data) {
             setListUser(res.data.result);
             setTotal(res.data.meta.total);

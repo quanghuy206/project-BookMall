@@ -121,7 +121,7 @@ const BookTable = () => {
         let query = `current=${current}&pageSize=${pageSize}`
 
         if (filter) {
-            query += filter
+            query = `current=1&pageSize=5/${filter}`
         }
         if (sortQuery) {
             query += `&${sortQuery}`

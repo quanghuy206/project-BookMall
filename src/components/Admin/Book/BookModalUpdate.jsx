@@ -4,6 +4,7 @@ import { callCreateBook, callGetCategoryBook, callUpdateBook, callUploadBookImg 
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import Loading from '../../Loading/index'
 import { v4 as uuidv4 } from 'uuid';
+import { Logger } from 'sass';
 
 const BookModalUpdate = (props) => {
     const { openModalUpdate, setOpenModalUpdate, dataUpdate, setDataUpdate } = props
@@ -85,7 +86,6 @@ const BookModalUpdate = (props) => {
 
     //Update Book
     const onFinish = async (values) => {
-        
         if (dataThumbnail.length === 0) {
             notification.error({
                 message: "Lỗi hình ảnh",
@@ -105,6 +105,10 @@ const BookModalUpdate = (props) => {
         const slider = dataSlider.map(item => item.name);
         const res = await callUpdateBook(_id,thumbnail,slider,mainText,author,price,sold,quantity,category)
         if (res && res.data) {
+            console.log(sold);
+            
+            console.log(res);
+            
             message.success('Cập nhật thành công');
             form.resetFields();
             setDataSlider([]);
@@ -342,7 +346,7 @@ const BookModalUpdate = (props) => {
                                     },
                                 ]}
                             >
-                                <InputNumber min={0} defaultValue={0} style={{ width: '100%' }} />
+                                <InputNumber min={0}  style={{ width: '100%' }} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
