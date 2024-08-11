@@ -54,6 +54,7 @@ export default function App() {
   }, [window.location.pathname, dispatch])
 
   const router = createBrowserRouter([
+    //Main Page
     {
       path: "/",
       element: <Layout />,
@@ -65,13 +66,14 @@ export default function App() {
           element: <ContactPage />
         },
         {
-          path: "book",
+          path: "book/:slug",
           element: <BookPage />
         }
       ]
 
     },
 
+    //Admin Manager Page
     {
       path: "/admin",
       element: <LayoutAdmin />,
@@ -105,6 +107,8 @@ export default function App() {
       ]
 
     },
+
+    //Login And Register
     {
       path: "/login",
       element: <LoginPage />
