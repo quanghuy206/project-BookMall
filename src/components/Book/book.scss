@@ -16,6 +16,14 @@
         word-break: break-word;
     }
 
+    .author {
+        span {
+            font-weight: 400;
+            font-size: 18px;
+        }
+
+    }
+
     .rating {
         display: flex;
 
@@ -43,6 +51,7 @@
             color: #ee4d2d;
         }
     }
+
     .delivery {
         padding: 10px 0;
     }
@@ -51,9 +60,11 @@
         padding: 10px 0;
         display: flex;
         align-items: center;
-        .left-quantity{
+
+        .left-quantity {
             margin-right: 30px;
         }
+
         .right-quantity {
             display: flex;
 
@@ -93,13 +104,14 @@
             }
         }
     }
-    
+
     .left-deli {
         color: #757575;
         width: 110px;
         text-transform: capitalize;
         display: inline-block;
     }
+
     .buy {
         display: flex;
         gap: 20px;
