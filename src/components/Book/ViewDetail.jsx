@@ -9,13 +9,16 @@ import { BsCartPlus } from 'react-icons/bs';
 import BookLoader from './BookLoader';
 import { useLocation, useParams } from 'react-router-dom';
 import { callGetDetailBook } from '../../services/api';
+import { useDispatch } from 'react-redux';
+import { doAddBookAction } from '../../redux/order/orderSlice';
 
 const ViewDetail = (props) => {
     const { dataBook } = props
     const [isOpenModalGallery, setIsOpenModalGallery] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
-    console.log("data", dataBook);
+    const [currentQuantity, setCurrentQuantity] = useState(1);
 
+    const dispatch = useDispatch()
     const refGallery = useRef(null);
 
     const images = dataBook?.items ?? []
@@ -24,6 +27,36 @@ const ViewDetail = (props) => {
     const handleOnClickImage = () => {
         setIsOpenModalGallery(true)
         setCurrentIndex(refGallery?.current?.getCurrentIndex() ?? 0)
+    }
+    const handleChangeButton = (type) => {
+        if(type === "MINUS") {
+           if(currentQuantity - 1 <= 0 ) return; 
+           setCurrentQuantity(currentQuantity - 1)
+        }
+        if(type === "PLUS"){
+            if(currentQuantity === +dataBook.quantity) return ; //Max quantity
+            setCurrentQuantity(currentQuantity + 1)
+        }
+    }
+    const handleChangeInput = (value) => {
+        const numberValue = Number(value)
+        console.log(numberValue);
+        
+        if(!isNaN(value)) {
+            if(+value > 0 && +value < +dataBook.quantity){
+                setCurrentQuantity(+value)
+            }
+        } 
+        // if(!isNaN(numberValue) && numberValue > 0 && numberValue < Number(dataBook.quantity)){
+        //     setCurrentQuantity(numberValue)
+        // }
+        // if(!isNaN(numberValue) && numberValue > Number(dataBook.quantity))
+        // {
+        //     setCurrentQuantity(dataBook.quantity)
+        // }
+    }
+    const handleAddToCart = (quantity,book) => {
+        dispatch(doAddBookAction({quantity,detail:book,_id:book._id}))
     }
     return (
         <div style={{ background: '#efefef', padding: "20px 0" }}>
@@ -84,15 +117,20 @@ const ViewDetail = (props) => {
                                         <div className='quantity'>
                                             <span className='left-quantity'>Số lượng</span>
                                             <span className='right-quantity'>
-                                                <button ><MinusOutlined /></button>
-                                                <input defaultValue={1} />
-                                                <button><PlusOutlined /></button>
+                                                <button onClick={() => handleChangeButton("MINUS")}>
+                                                    <MinusOutlined />
+                                                </button>
+                                                <input  onChange={(e) => handleChangeInput(e.target.value)} value={currentQuantity}/>
+                                                <button onClick={() => handleChangeButton("PLUS")}>
+                                                    <PlusOutlined />
+                                                </button>
                                             </span>
+                                            <span className='quantity-current'>{dataBook?.quantity} sản phẩm có sẵn</span>
                                         </div>
                                         <div className='buy'>
-                                            <button className='cart'>
+                                            <button className='cart' onClick={() => handleAddToCart(currentQuantity,dataBook)}>
                                                 <BsCartPlus className='icon-cart' />
-                                                <span>Thêm vào giỏ hàng</span>
+                                                <span >Thêm vào giỏ hàng</span>
                                             </button>
                                             <button className='now'>Mua ngay</button>
                                         </div>
@@ -101,9 +139,7 @@ const ViewDetail = (props) => {
                             </Row>
                             :
                             <BookLoader />
-
                     }
-
                 </div>
             </div>
             <ModalGallery

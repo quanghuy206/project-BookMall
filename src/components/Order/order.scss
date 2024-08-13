@@ -1,0 +1,133 @@
+.order-container {
+    
+    .order-book {
+        background-color: #fff;
+        display: flex;
+        flex-direction: row; // Default to row layout
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        align-items: center;
+        justify-content: space-between;
+
+        .order-content {
+            display: flex;
+            gap: 15px;
+            width: 50%;
+            justify-content: space-between;
+            align-items: center;
+            margin-right: 20px;
+
+            img {
+                width: 80px; // Slightly larger image
+                height: 80px;
+                border-radius: 4px;
+            }
+
+        }
+    }
+
+    .action {
+        width: 50%;
+        gap: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+    }
+    .order-sum{
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        .calculate {
+            display: flex;
+            justify-content: space-between;
+
+            .sum-final {
+                color: #fe3834;
+                font-size: 22px;
+                font-weight: 400;
+            }
+        }
+        button {
+            margin-top: 15px;
+            background-color: #ee4d2d;
+            color: #fff;
+            border: 1px solid #ee4d2d;
+            box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .03);
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 16px;
+            height: 40px;
+            padding: 0 20px;
+
+            &:hover {
+                background-color: #e45b3f;
+
+            }
+        }
+
+
+    }
+
+
+    @media (max-width: 480px) {
+        .order-book {
+            flex-direction: column;
+            padding: 10px; // Less padding on very small screens
+
+            .order-content {
+                width: 100%; // Full width on very small screens
+                margin-bottom: 10px; // Space between items
+
+                img {
+                    width: 60px; // Smaller image
+                    height: 60px;
+                }
+                .title {
+                    height: 50px;
+                    line-height: 50px;
+                }
+                .price {
+                    height: 50px;
+                    line-height: 50px;
+                }
+            }
+
+            .sum {
+                display: none; // Hide sum on very small screens
+            }
+
+            
+            .action {
+                width: 100%;
+                margin-top: 10px;
+                justify-content: space-between;
+                align-items: center; // Align items to the center
+                .inputQuantity{
+                    width: 70%;
+                }
+                .delete-btn {
+                    font-size: 20px;
+                    padding: 0 10px;
+                }
+            }
+
+        }
+
+        .order-sum {
+            padding: 15px; // Less padding on very small screens
+
+            button {
+                height: 35px; // Smaller button
+                font-size: 14px; // Smaller font size
+            }
+        }
+    }
+}
