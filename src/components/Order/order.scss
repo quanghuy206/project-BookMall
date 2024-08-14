@@ -1,5 +1,5 @@
 .order-container {
-    
+
     .order-book {
         background-color: #fff;
         display: flex;
@@ -36,7 +36,8 @@
         justify-content: space-between;
 
     }
-    .order-sum{
+
+    .order-sum {
         background-color: #fff;
         display: flex;
         flex-direction: column;
@@ -55,6 +56,7 @@
                 font-weight: 400;
             }
         }
+
         button {
             margin-top: 15px;
             background-color: #ee4d2d;
@@ -76,6 +78,61 @@
 
     }
 
+    .empty-cart {
+        text-align: center;
+        padding: 40px;
+        border: 2px dashed #ddd;
+        border-radius: 12px;
+        background-color: #f9f9f9;
+        margin: 20px auto;
+        max-width: 600px;
+        position: relative;
+
+        .empty-cart__icon {
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            font-size: 18px;
+        }
+
+        // Optional: Add a background animation or effect
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border-radius: 12px;
+            z-index: -1;
+        }
+    }
+
+    @media (max-width: 768px) {
+        padding: 15px;
+        max-width: 90%;
+
+        .empty-cart__icon {
+            font-size: 40px;
+        }
+
+        h2 {
+            font-size: 20px;
+        }
+
+        p {
+            font-size: 14px;
+        }
+    }
 
     @media (max-width: 480px) {
         .order-book {
@@ -90,10 +147,12 @@
                     width: 60px; // Smaller image
                     height: 60px;
                 }
+
                 .title {
                     height: 50px;
                     line-height: 50px;
                 }
+
                 .price {
                     height: 50px;
                     line-height: 50px;
@@ -104,15 +163,17 @@
                 display: none; // Hide sum on very small screens
             }
 
-            
+
             .action {
                 width: 100%;
                 margin-top: 10px;
                 justify-content: space-between;
                 align-items: center; // Align items to the center
-                .inputQuantity{
+
+                .inputQuantity {
                     width: 70%;
                 }
+
                 .delete-btn {
                     font-size: 20px;
                     padding: 0 10px;
@@ -129,5 +190,19 @@
                 font-size: 14px; // Smaller font size
             }
         }
+
+        .empty-cart__icon {
+            font-size: 30px;
+
+            h2 {
+                font-size: 18px;
+            }
+
+            p {
+                font-size: 12px;
+            }
+        }
+
+
     }
 }
