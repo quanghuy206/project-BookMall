@@ -11,8 +11,6 @@ export const orderSlice = createSlice({
         doAddBookAction: (state, action) => {
             let carts = state.carts //state current
             const item = action.payload
-            console.log(carts);
-
             let isExistIndex = carts.findIndex(c => c._id === item._id)
             if (isExistIndex > -1) {
                 carts[isExistIndex].quantity = carts[isExistIndex].quantity + item.quantity
@@ -44,14 +42,15 @@ export const orderSlice = createSlice({
 
         },
         doDeleteItemCartAction: (state, action) => {
-            console.log(JSON.stringify(state));
-            console.log(action);
-            state.carts = state.carts.filter(c => c._id !== action.payload._id) 
-           
+            state.carts = state.carts.filter(c => c._id !== action.payload._id)
+
+        },
+        doPlaceOrderAction: (state, action) => {
+            state.carts = []
         }
     }
 })
 
-export const { doAddBookAction, doUpdateCartAction, doDeleteItemCartAction } = orderSlice.actions
+export const { doAddBookAction, doUpdateCartAction, doDeleteItemCartAction,doPlaceOrderAction } = orderSlice.actions
 
 export default orderSlice.reducer

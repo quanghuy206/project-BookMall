@@ -38,11 +38,21 @@ const Header = () => {
             key: 'account',
         },
         {
+            label: <Link to='/history'>Lịch sử mua hàng</Link>,
+            key: 'history',
+        },
+        {
             label: <label onClick={() => handleLogout()}>Đăng xuất </label>,
             key: 'logout',
         },
 
     ];
+    // if (user?.role === 'USER') {
+    //     items.splice(1, 0, {
+    //         label: <Link to='/history'>Lịch sử mua hàng</Link>,
+    //         key: 'history',
+    //     });
+    // }
     if (user?.role === 'ADMIN') {
         items.splice(1, 0, {
             label: <Link to='/admin'>Trang quản trị</Link>,
@@ -75,7 +85,15 @@ const Header = () => {
                     })}
                 </div>
                 <div className='pop-cart-footer'>
-                    <button onClick={() => navigate("/order")}>Xem giỏ hàng</button>
+                    <button
+                        onClick={() => {
+                            setTimeout(() => {
+                                navigate("/order"); // Điều hướng ngay lập tức
+                            }, 1000);
+                        }}
+                    >
+                        Xem giỏ hàng
+                    </button>
                 </div>
             </div>
         )

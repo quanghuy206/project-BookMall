@@ -7,13 +7,14 @@ import './book.scss'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { BsCartPlus } from 'react-icons/bs';
 import BookLoader from './BookLoader';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { callGetDetailBook } from '../../services/api';
 import { useDispatch } from 'react-redux';
 import { doAddBookAction } from '../../redux/order/orderSlice';
 
 const ViewDetail = (props) => {
     const { dataBook } = props
+    const navigate = useNavigate()
     const [isOpenModalGallery, setIsOpenModalGallery] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentQuantity, setCurrentQuantity] = useState(1);
@@ -57,6 +58,11 @@ const ViewDetail = (props) => {
     }
     const handleAddToCart = (quantity,book) => {
         dispatch(doAddBookAction({quantity,detail:book,_id:book._id}))
+    }
+
+    const handleBuyNow = (quantity,book) => {
+        dispatch(doAddBookAction({quantity,detail:book,_id:book._id}))
+        navigate("/order")
     }
     return (
         <div style={{ background: '#efefef', padding: "20px 0" }}>
@@ -132,7 +138,7 @@ const ViewDetail = (props) => {
                                                 <BsCartPlus className='icon-cart' />
                                                 <span >Thêm vào giỏ hàng</span>
                                             </button>
-                                            <button className='now'>Mua ngay</button>
+                                            <button onClick={() => handleBuyNow(currentQuantity,dataBook)} className='now'>Mua ngay</button>
                                         </div>
                                     </Col>
                                 </Col>

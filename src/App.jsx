@@ -23,6 +23,7 @@ import AdminPage from './pages/admin';
 import ManagerUserTable from './components/Admin/User/UserTable';
 import ManagerBookTable from './components/Admin/Book/BookTable'
 import OrderPage from './pages/order';
+import HistoryPage from './pages/history';
 
 const Layout = () => {
   return (
@@ -73,6 +74,10 @@ export default function App() {
         {
           path:"order",
           element:<OrderPage/>
+        },
+        {
+          path:"history",
+          element:<HistoryPage/>
         }
       ]
 

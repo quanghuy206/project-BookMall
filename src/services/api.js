@@ -76,3 +76,12 @@ export const callGetDetailBook = (_id) => {
    return axios.get(`/api/v1/book/${_id}`)
 }
 
+//Order
+export const callPlaceOrder = (data) => {
+   return axios.post(`/api/v1/order`,{...data})
+}
+
+//order history
+export const callGetHistory = () => {
+   return axios.get(`/api/v1/history`)
+}
