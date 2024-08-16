@@ -11,8 +11,6 @@ const History = () => {
     const showDrawer = (data) => {
         setOpen(true);
         setDataDetail(data)
-        console.log(dataDetail);
-        
     };
     const onClose = () => {
         setOpen(false);
@@ -26,7 +24,6 @@ const History = () => {
         }
         fetchHistory()
     }, [])
-    console.log(orderHistory);
     const columns = [
         {
             title: 'STT',
@@ -104,18 +101,19 @@ const History = () => {
         <div >
             <div style={{ margin: "15px 0" }}>Lịch sử đặt hàng:</div>
             <Table columns={columns} dataSource={orderHistory} pagination={false} style={{ margin: "15px 0" }}/>
+            
+
+
             <Drawer title="Chi tiết đơn hàng" onClose={onClose} open={open} width={"50vw"}>
                 <Descriptions title="Thông tin đơn hàng " bordered column={2}   >
-                    {<Descriptions.Item label="Tên sản phẩm" >{dataDetail?.detail?.map(item => item.bookName)}</Descriptions.Item> }
-                    {<Descriptions.Item label="Tên sản phẩm" >{dataDetail?.detail?.map(item => item.bookName)}</Descriptions.Item> }
+                    {<Descriptions.Item label="Tên sản phẩm"  span={2}>{dataDetail?.detail?.map(item => item.bookName)}</Descriptions.Item> }
                     <Descriptions.Item label="Email" >{dataDetail?.email}</Descriptions.Item>
                     <Descriptions.Item label="Số điện thoại" >{dataDetail?.phone}</Descriptions.Item>
                     <Descriptions.Item label="Trạng thái" span={2}>
-                        <Badge status="processing" text={"Thành công"} />
+                        <Tag  color={"green"}>Thành công</Tag>
                     </Descriptions.Item>
                     <Descriptions.Item label="Ngày Mua" >
                         {moment(dataDetail?.createdAt).format('DD-MM-YYYY, h:mm:ss')}
-
                     </Descriptions.Item>
                     <Descriptions.Item label="Số lượng" >
                         {dataDetail?.detail?.map(item => item.quantity)}

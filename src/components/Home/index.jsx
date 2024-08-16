@@ -201,9 +201,9 @@ const Home = () => {
                                 >
                                     <Checkbox.Group>
                                         <Row>
-                                            {listCategory.map(item => {
+                                            {listCategory.map((item,index) => {
                                                 return (
-                                                    <Col span={24}>
+                                                    <Col span={24} key={index}>
                                                         <Checkbox value={item.value} >
                                                             {item.label}
                                                         </Checkbox>

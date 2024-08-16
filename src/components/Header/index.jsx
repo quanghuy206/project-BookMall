@@ -10,18 +10,23 @@ import { callFetchLogoutAccount } from '../../services/api';
 import { doLogoutAccountAction } from '../../redux/account/accountSlice';
 import { Link } from 'react-router-dom';
 import '../../styles/globle.scss'
+import ManagerAccount from '../Account/ManagerAccount';
 
 const Header = () => {
 
     const [openDrawer, setOpenDrawer] = useState(false);
+    const [showManageAccount, setShowManageAccount] = useState(false);
     //get data Redux 
     const isAuthenticated = useSelector(state => state.account.isAuthenticated);
     const user = useSelector(state => state.account.user);
     const carts = useSelector(state => state.order.carts)
-
     const navigate = useNavigate();
     const dispatch = useDispatch()
 
+    // handleOpenDrawerMenu = () => {
+    //     // setShowManageAccount(true)
+    //     // setOpenDrawer(false)
+    // }
     //LogOut
     const handleLogout = async () => {
         const res = await callFetchLogoutAccount();
@@ -34,7 +39,10 @@ const Header = () => {
     }
     let items = [
         {
-            label: <label>Quản lý tài khoản</label>,
+            label: <label style={{ cursor: 'pointer' }}
+                onClick={() => setShowManageAccount(true)}
+            >
+                Quản lý tài khoản</label>,
             key: 'account',
         },
         {
@@ -42,17 +50,11 @@ const Header = () => {
             key: 'history',
         },
         {
-            label: <label onClick={() => handleLogout()}>Đăng xuất </label>,
+            label: <label style={{ cursor: 'pointer' }} onClick={() => handleLogout()}>Đăng xuất </label>,
             key: 'logout',
         },
 
     ];
-    // if (user?.role === 'USER') {
-    //     items.splice(1, 0, {
-    //         label: <Link to='/history'>Lịch sử mua hàng</Link>,
-    //         key: 'history',
-    //     });
-    // }
     if (user?.role === 'ADMIN') {
         items.splice(1, 0, {
             label: <Link to='/admin'>Trang quản trị</Link>,
@@ -98,6 +100,7 @@ const Header = () => {
             </div>
         )
     }
+
     return (
         <>
             <div className='header-container'>
@@ -163,12 +166,17 @@ const Header = () => {
                 onClose={() => setOpenDrawer(false)}
                 open={openDrawer}
             >
-                <p>Quản lý tài khoản</p>
+                <p
+                    onClick={() => handleOpenDrawerMenu()}>Quản lý tài khoản</p>
                 <Divider />
 
                 <p >Đăng xuất</p>
                 <Divider />
             </Drawer>
+            <ManagerAccount
+                isModalOpen={showManageAccount}
+                setIsModalOpen={setShowManageAccount}
+            />
         </>
 
     )

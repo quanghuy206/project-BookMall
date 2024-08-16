@@ -41,12 +41,22 @@ export const accountSlice = createSlice({
           avatar: "",
           id: ""
         }
+    },
+    //Update Avatar info 
+    doUpdateAvatarAction: (state, action) => {
+      state.tempAvatar = action.payload.avatar
+    },
+    doUpdateUserInforAction: (state, action) => {
+      console.log(action);
+      state.user.fullName = action.payload.fullName
+      state.user.phone = action.payload.phone
+      state.user.avatar = action.payload.userAvatar
     }
   },
 
 
 });
 
-export const { doLoginAction, doGetAccountAction, doLogoutAccountAction } = accountSlice.actions;
+export const { doLoginAction, doGetAccountAction, doLogoutAccountAction, doUpdateAvatarAction,doUpdateUserInforAction } = accountSlice.actions;
 
 export default accountSlice.reducer;
