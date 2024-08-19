@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AppstoreOutlined,
   BookOutlined,
@@ -28,9 +28,10 @@ const items = [
   },
   {
     label: <span>Manage Users</span>,
-    // key: 'managerUser',
+    key: 'managerUser',
     icon: <UserOutlined />,
     children: [{
+      key: "crud",
       label: <Link to="/admin/user">CRUD</Link>
     }
     ]
@@ -59,6 +60,12 @@ const LayoutAdmin = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch();
 
+  // useEffect(() => {
+  //   if(window.location.pathname.includes('/book')){
+  //     setActiveMenu('/book')
+  //   }
+  // },[])
+
   const handleLogout = async () => {
     const res = await callFetchLogoutAccount();
     if (res && res.data) {
@@ -80,6 +87,8 @@ const LayoutAdmin = () => {
 
   ];
 
+  // console.log(activeMenu);
+
   if (user?.role === 'ADMIN') {
     itemsDropdown.splice(1, 0, {
       label: <Link to='/'>Trang chủ</Link>,
@@ -90,7 +99,7 @@ const LayoutAdmin = () => {
   const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user.avatar}`
 
   return (
-    <Layout style={{ minHeight: '100vh',}} >
+    <Layout style={{ minHeight: '100vh', }} >
       <Sider
         theme="light"
         collapsible
@@ -99,9 +108,14 @@ const LayoutAdmin = () => {
         <div className='title-header-dashboard'>ADMIN</div>
         <Menu
           theme="light"
-          defaultSelectedKeys={['1']}
+          // defaultSelectedKeys={["/"]}
+          selectedKeys={[activeMenu]}
           mode="inline"
           items={items}
+          onClick={(e) => {
+            setActiveMenu(e.key)
+            
+          }}
         />
       </Sider>
       <Layout>

@@ -22,14 +22,16 @@ import LayoutAdmin from './components/Admin/LayoutAdmin';
 import AdminPage from './pages/admin';
 import ManagerUserTable from './components/Admin/User/UserTable';
 import ManagerBookTable from './components/Admin/Book/BookTable'
+import ManagerOrderTable from './components/Admin/Order/OrderTable'
 import OrderPage from './pages/order';
 import HistoryPage from './pages/history';
 
 const Layout = () => {
+  const [searchTemp,setSearchTemp] = useState()
   return (
     <div className='layout-app'>
-      <Header />
-      <Outlet />
+      <Header searchTemp={searchTemp} setSearchTemp={setSearchTemp}/>
+      <Outlet context={[searchTemp,setSearchTemp]}/>
       <Footer />
     </div>
   )
@@ -72,12 +74,12 @@ export default function App() {
           element: <BookPage />
         },
         {
-          path:"order",
-          element:<OrderPage/>
+          path: "order",
+          element: <OrderPage />
         },
         {
-          path:"history",
-          element:<HistoryPage/>
+          path: "history",
+          element: <HistoryPage />
         }
       ]
 
@@ -103,8 +105,10 @@ export default function App() {
             </ProtectedRoute>
         },
         {
-          path: "contact",
-          element: <ContactPage />
+          path: "order",
+          element: <ProtectedRoute>
+            <ManagerOrderTable />
+          </ProtectedRoute>
         },
         {
           path: "book",
@@ -140,6 +144,7 @@ export default function App() {
           <RouterProvider router={router} />
           :
           <Loading />
+          // <RouterProvider router={router} />
       }
     </>
   )

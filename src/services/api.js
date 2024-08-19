@@ -75,6 +75,7 @@ export const callDeleteBook = (_id) => {
 export const callGetDetailBook = (_id) => {
    return axios.get(`/api/v1/book/${_id}`)
 }
+// Book =====
 
 //Order
 export const callPlaceOrder = (data) => {
@@ -85,6 +86,8 @@ export const callPlaceOrder = (data) => {
 export const callGetHistory = () => {
    return axios.get(`/api/v1/history`)
 }
+
+//Update User Info
 
 export const callUpdateAvatar = (fileImg) => {
    const bodyFormData = new FormData();
@@ -100,7 +103,6 @@ export const callUpdateAvatar = (fileImg) => {
    });
 
 }
-
 export const callUpdateInfo = (_id,fullName,phone,avatar) => {
    return axios.put('/api/v1/user',{_id,fullName,phone,avatar})
 }
@@ -109,7 +111,15 @@ export const callChangePassword = (email,oldpass,newpass) => {
    return axios.post('/api/v1/user/change-password',{email,oldpass,newpass})
 }
 
+//
 
+//Dashboard admin manager
+export const callGetStatisticDashboard = () => {
+   return axios.get('/api/v1/database/dashboard')
+}
+export const callGetListOrder= (query) => {
+   return axios.get(`/api/v1/order?${query}`)
+}
 
 
 

@@ -134,7 +134,6 @@ const UserTable = () => {
         }
 
         const res = await callFetchAllUser(query);
-        console.log(query);
         
         if (res && res?.data) {
             setListUser(res.data.result);
@@ -144,6 +143,7 @@ const UserTable = () => {
     };
     //Search by Input
     const handleSearch = (query) => {
+        setCurrent(1)
         setFilter(query);
     };
     //Delete User

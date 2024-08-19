@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FiShoppingCart } from 'react-icons/fi';
-import { Divider, Badge, Drawer, message, Dropdown, Space, Avatar, Popover } from 'antd';
+import { Divider, Badge, Drawer, message, Dropdown, Space, Avatar, Popover, Input } from 'antd';
 import './header.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { DownOutlined, UserOutlined } from '@ant-design/icons';
@@ -11,9 +11,10 @@ import { doLogoutAccountAction } from '../../redux/account/accountSlice';
 import { Link } from 'react-router-dom';
 import '../../styles/globle.scss'
 import ManagerAccount from '../Account/ManagerAccount';
-
-const Header = () => {
-
+// import Search from 'antd/es/transfer/search';
+const { Search } = Input;
+const Header = (props) => {
+    const { searchTemp, setSearchTemp } = props
     const [openDrawer, setOpenDrawer] = useState(false);
     const [showManageAccount, setShowManageAccount] = useState(false);
     //get data Redux 
@@ -101,6 +102,10 @@ const Header = () => {
         )
     }
 
+
+    const onSearch = (value, _e, info) => {
+        setSearchTemp(value)
+    };
     return (
         <>
             <div className='header-container'>
@@ -108,14 +113,18 @@ const Header = () => {
                     <div className="page-header__top">
                         <div className="page-header__toggle" onClick={() => {
                             setOpenDrawer(true)
-                        }}>☰</div>
+                        }}>
+                            ☰
+                        </div>
                         <div className='page-header__logo'>
                             <span className='logo' onClick={() => navigate('/')}>
                                 <AiFillShopping className='rotate icon-react' /> Ecommer
                             </span>
-                            <input
-                                className="input-search" type={'text'}
+                            <Search
+                                className="input-search"
                                 placeholder="Bạn tìm gì hôm nay"
+                                onSearch={onSearch}
+                                enterButton style={{ width: "300px" }}
                             />
                         </div>
 
@@ -160,18 +169,26 @@ const Header = () => {
                     </nav>
                 </header>
             </div>
+            {/* Mobile Menu  */}
             <Drawer
                 title="Menu chức năng"
                 placement="left"
                 onClose={() => setOpenDrawer(false)}
                 open={openDrawer}
             >
-                <p
-                    onClick={() => handleOpenDrawerMenu()}>Quản lý tài khoản</p>
+                <label style={{ cursor: 'pointer' }}
+                    onClick={() => setShowManageAccount(true)}
+                >
+                    Quản lý tài khoản</label>
+                <Divider />
+                <Link to='/history'>Lịch sử mua hàng</Link>
+                <Divider />
+                {
+                    user?.role === "ADMIN" && <Link to='/admin'>Trang quản trị</Link>
+                }
+                <label style={{ cursor: 'pointer' }} onClick={() => handleLogout()}>Đăng xuất </label>
                 <Divider />
 
-                <p >Đăng xuất</p>
-                <Divider />
             </Drawer>
             <ManagerAccount
                 isModalOpen={showManageAccount}

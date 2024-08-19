@@ -1,14 +1,19 @@
-import { FilterTwoTone, LoadingOutlined, ReloadOutlined } from '@ant-design/icons';
-import { Row, Col, Form, Checkbox, Divider, InputNumber, Button, Rate, Tabs, Pagination, Spin } from 'antd';
+import { FilterTwoTone, HomeOutlined, LoadingOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Row, Col, Form, Checkbox, Divider, InputNumber, Button, Rate, Tabs, Pagination, Spin, Breadcrumb, Empty } from 'antd';
 import './home.scss';
 import { useEffect, useState } from 'react';
 import { callFetchListBook, callGetCategoryBook } from '../../services/api';
 import Loading from '../Loading';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useOutletContext } from 'react-router-dom';
+import MobileFilter from './MobileFilter';
 
 const Home = () => {
     const navigate = useNavigate()
+    const [searchTemp, setSearchTemp] = useOutletContext()
+    console.log("body Search",searchTemp);
+    
     const [listCategory, setListCategory] = useState([])
+    const [showMobileFilter, setShowMobileFilter] = useState(false);
 
     const [listBook, setListBook] = useState([]);
     const [current, setCurrent] = useState(1);
@@ -19,10 +24,8 @@ const Home = () => {
     const [filter, setFilter] = useState("");
     const [sortQuery, setSortQuery] = useState("sort=-sold");
     const [form] = Form.useForm();
-
     //filter by category checkbokx
     const handleChangeFilter = (changedValues, values) => {
-        console.log(">>> check handleChangeFilter", changedValues, values)
         if (changedValues.category) {
             const cate = values.category
             if (cate && cate.length > 0) {
@@ -36,6 +39,7 @@ const Home = () => {
         }
     }
     const imageUrl = `${import.meta.env.VITE_BACKEND_URL}/images/book/`
+
     //init List Category
     useEffect(() => {
         const initCategory = async () => {
@@ -52,7 +56,7 @@ const Home = () => {
 
     useEffect(() => {
         fetchBook()
-    }, [current, pageSize, filter, sortQuery])
+    }, [current, pageSize, filter, sortQuery,searchTemp])
 
     const fetchBook = async () => {
         //current=1&pageSize=10
@@ -64,6 +68,10 @@ const Home = () => {
         }
         if (sortQuery) {
             query += `&${sortQuery}`
+        }
+
+        if(searchTemp) {
+            query += `&mainText=/${searchTemp}/i`
         }
         const res = await callFetchListBook(query)
         if (res && res.data) {
@@ -86,6 +94,7 @@ const Home = () => {
     const handleResetSearch = () => {
         setFilter("")
         form.resetFields()
+        setSearchTemp("")
     }
     const onFinish = (values) => {
         //Filter Price Form - To
@@ -106,9 +115,6 @@ const Home = () => {
         }
     }
 
-    const onChange = (key) => {
-        console.log(key);
-    };
 
     const items = [
         {
@@ -178,15 +184,37 @@ const Home = () => {
         const slug = convertSlug(book.mainText)
         navigate(`/book/${slug}?id=${book._id}`)
     }
+
     return (
         <div style={{ background: '#efefef', padding: "20px 0" }}>
             <div className="homepage-container" style={{ maxWidth: 1440, margin: '0 auto' }}>
+                <Breadcrumb
+                    style={{ margin: '5px 0' }}
+                    items={[
+                        {
+                            // href: '#',
+                            title: <HomeOutlined />,
+                        },
+                        {
+                            title: (
+                                <Link to={'/'}>
+                                    <span>Trang Chủ</span>
+                                </Link>
+                            ),
+                        }
+                    ]}
+                />
+
                 <Row gutter={[20, 20]} >
+                    {/* filter Book Left */}
                     <Col md={4} sm={0} xs={0} >
                         <div style={{ padding: "20px", background: '#fff', borderRadius: 5 }}>
                             <div style={{ display: 'flex', justifyContent: "space-between" }}>
-                                <span> <FilterTwoTone /> Bộ lọc tìm kiếm</span>
-                                <ReloadOutlined title="Reset" onClick={() => handleResetSearch()} />
+                                <span> <FilterTwoTone />
+                                    Bộ lọc tìm kiếm
+                                </span>
+                                <ReloadOutlined title="Reset"
+                                    onClick={() => handleResetSearch()} />
                             </div>
                             <Form
                                 onFinish={onFinish}
@@ -201,7 +229,7 @@ const Home = () => {
                                 >
                                     <Checkbox.Group>
                                         <Row>
-                                            {listCategory.map((item,index) => {
+                                            {listCategory.map((item, index) => {
                                                 return (
                                                     <Col span={24} key={index}>
                                                         <Checkbox value={item.value} >
@@ -272,57 +300,78 @@ const Home = () => {
                         </div>
 
                     </Col>
+
+                    {/* Main home */}
                     <Col md={20} xs={24} >
-                        <Spin
-                            indicator={<LoadingOutlined spin style={{ fontSize: 40 }} />}
-                            spinning={isLoading}>
-                            {
-                                listBook.length < 0 ?
-                                    <div>Không có </div> :
-                                    <div style={{ padding: "20px", background: "#fff" }}>
-                                        <Row>
-                                            <Tabs defaultActiveKey="1" items={items} onChange={(value) => setSortQuery(value)} />
-                                        </Row>
-                                        <Row className='customize-row'>
-                                            {listBook?.map((item, index) => {
-                                                return (
-                                                    <div className="column" key={`book-${index}`} 
-                                                        onClick={() => handleRedirectBook(item)}
-                                                    >
-                                                        <div className='wrapper'>
-                                                            <div className='thumbnail'>
-                                                                <img src={`${imageUrl}${item.thumbnail}`} alt="thumbnail book" />
-                                                            </div>
-                                                            <div className='text'>{item.mainText}</div>
-                                                            <div className='price'>
-                                                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}
-                                                            </div>
-                                                            <div className='rating'>
-                                                                <Rate value={5} disabled style={{ color: '#ffce3d', fontSize: 10 }} />
-                                                                <span>{item.sold}</span>
-                                                            </div>
-                                                        </div>
+                        <Spin spinning={isLoading} tip="Loading...">
+                            <div style={{ padding: "20px", background: '#fff', borderRadius: 5 }}>
+                                <Row >
+                                    <Tabs
+                                        defaultActiveKey="sort=-sold"
+                                        items={items}
+                                        onChange={(value) => { setSortQuery(value) }}
+                                        style={{ overflowX: "auto" }}
+                                    />
+                                    <Col xs={24} md={0}>
+                                        <div style={{ marginBottom: 20 }} >
+                                            <span onClick={() => setShowMobileFilter(true)}>
+                                                <FilterTwoTone />
+                                                <span style={{ fontWeight: 500 }}> Lọc</span>
+                                            </span>
+
+                                        </div>
+                                    </Col>
+                                    <br />
+                                </Row>
+                                <Row className='customize-row'>
+                                    {listBook?.map((item, index) => {
+                                        return (
+                                            <div className="column" key={`book-${index}`} onClick={() => handleRedirectBook(item)}>
+                                                <div className='wrapper'>
+                                                    <div className='thumbnail'>
+                                                        <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item.thumbnail}`} alt="thumbnail book" />
                                                     </div>
-                                                )
-                                            })}
+                                                    <div className='text' title={item.mainText}>{item.mainText}</div>
+                                                    <div className='price'>
+                                                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item?.price ?? 0)}
+                                                    </div>
+                                                    <div className='rating'>
+                                                        <Rate value={5} disabled style={{ color: '#ffce3d', fontSize: 10 }} />
+                                                        <span>Đã bán {item.sold}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
 
-
-                                        </Row>
-                                        <Divider />
-                                        <Row style={{ display: "flex", justifyContent: "center" }}>
-                                            <Pagination
-                                                total={total}
-                                                current={current}
-                                                pageSize={pageSize}
-                                                onChange={(p, s) => handleOnChange({ current: p, pageSize: s })}
-                                                responsive
+                                    {listBook.length === 0 &&
+                                        <div style={{ width: "100%", margin: "0 auto" }}>
+                                            <Empty
+                                                description="Không có dữ liệu"
                                             />
-                                        </Row>
-                                    </div>
-                            }
+                                        </div>
+                                    }
+                                </Row>
+                                <div style={{ marginTop: 30 }}></div>
+                                <Row style={{ display: "flex", justifyContent: "center" }}>
+                                    <Pagination
+                                        current={current}
+                                        total={total}
+                                        pageSize={pageSize}
+                                        responsive
+                                        onChange={(p, s) => handleOnChange({ current: p, pageSize: s })}
+                                    />
+                                </Row>
+                                <MobileFilter
+                                    isOpen={showMobileFilter}
+                                    setIsOpen={setShowMobileFilter}
+                                    handleChangeFilter={handleChangeFilter}
+                                    listCategory={listCategory}
+                                    onFinish={onFinish}
+                                />
 
+                            </div>
                         </Spin>
-
                     </Col>
                 </Row>
             </div>

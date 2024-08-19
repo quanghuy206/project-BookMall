@@ -14,6 +14,7 @@ const InputSearch = (props) => {
     };
 
     const onFinish = (values) => {
+        
         let query = "";
         if (values.fullName) {
             query += `&fullName=/${values.fullName}/i`;
