@@ -27,11 +27,12 @@ import OrderPage from './pages/order';
 import HistoryPage from './pages/history';
 
 const Layout = () => {
-  const [searchTemp,setSearchTemp] = useState()
+  const [searchTemp, setSearchTemp] = useState("")
+
   return (
     <div className='layout-app'>
-      <Header searchTemp={searchTemp} setSearchTemp={setSearchTemp}/>
-      <Outlet context={[searchTemp,setSearchTemp]}/>
+      <Header searchTemp={searchTemp} setSearchTemp={setSearchTemp} />
+      <Outlet context={[searchTemp, setSearchTemp]} />
       <Footer />
     </div>
   )
@@ -43,7 +44,8 @@ export default function App() {
   const isLoading = useSelector(state => state.account.isLoading)
 
   const getAccount = async () => {
-    if (window.location.pathname === "/login"
+    if (
+      window.location.pathname === "/login"
       || window.location.pathname === "/register"
     )
       return;
@@ -55,7 +57,7 @@ export default function App() {
   }
   useEffect(() => {
     getAccount();
-  }, [window.location.pathname, dispatch])
+  }, [])
 
   const router = createBrowserRouter([
     //Main Page
@@ -75,11 +77,19 @@ export default function App() {
         },
         {
           path: "order",
-          element: <OrderPage />
+          element:
+            <ProtectedRoute>
+              <OrderPage />
+            </ProtectedRoute>
+
         },
         {
           path: "history",
-          element: <HistoryPage />
+          element:
+            <ProtectedRoute>
+              <HistoryPage />
+            </ProtectedRoute>
+
         }
       ]
 
@@ -137,14 +147,15 @@ export default function App() {
     <>
       {
         isLoading === false
-          || window.location.pathname === "/login"
-          || window.location.pathname === "/register"
-          || window.location.pathname === "/"
-          ?
-          <RouterProvider router={router} />
-          :
-          <Loading />
-          // <RouterProvider router={router} />
+        || window.location.pathname === '/login'
+        || window.location.pathname === '/register'
+        || window.location.pathname === '/'
+        || window.location.pathname.startsWith('/book')
+        ?
+        <RouterProvider router={router} />
+        :
+        <Loading />
+
       }
     </>
   )

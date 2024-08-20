@@ -1,4 +1,7 @@
+import { Mutex } from "async-mutex";
 import axios from "axios";
+
+const mutex = new Mutex();
 const baseURL = import.meta.env.VITE_BACKEND_URL;
 
 const instance = axios.create({
@@ -7,10 +10,13 @@ const instance = axios.create({
 });
 
 instance.defaults.headers.common = { 'Authorization': `bearer ${localStorage.getItem('access_token')}` }
-// Add a request interceptor
 
+// Add a request interceptor
 instance.interceptors.request.use(function (config) {
   // Do something before request is sent
+  if (typeof window !== "undefined" && window && window.localStorage && window.localStorage.getItem("access_token")) {
+    config.headers.Authorization = 'Bearer ' + window.localStorage.getItem('access_token');
+  }
   return config;
 }, function (error) {
   // Do something with request error
@@ -18,9 +24,16 @@ instance.interceptors.request.use(function (config) {
 });
 
 const handleRefreshToken = async () => {
-  const res = await instance.get("/api/v1/auth/refresh")
-  if (res && res.data) return res.data.access_token
-  else null;
+  // const res = await instance.get("/api/v1/auth/refresh")
+  // if (res && res.data) return res.data.access_token
+  // else null;
+
+  //request step by step just 1 request refresh token can call
+  return await mutex.runExclusive(async () => {
+    const res = await instance.get('/api/v1/auth/refresh');
+    if (res && res.data) return res.data.access_token;
+    else return null;
+  });
 }
 
 // Add a response interceptor
@@ -44,11 +57,9 @@ instance.interceptors.response.use(function (response) {
   }
 
   if (
-    error.config && error.response
-    && +error.response.status === 400
-    && error.config.url === '/api/v1/auth/refresh'
+    error.config && error.response && +error.response.status === 400 && error.config.url === '/api/v1/auth/refresh'
   ) {
-    window.location.href = '/login';
+    //  window.location.href = '/login';
   }
 
 

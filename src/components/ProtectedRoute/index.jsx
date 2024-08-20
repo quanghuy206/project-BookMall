@@ -7,7 +7,7 @@ const RoleBaseRoute = (props) => {
     const user = useSelector(state => state.account.user)
     const userRole = user.role
 
-    if (isAdminRoute && userRole === "ADMIN" || !isAdminRoute && (userRole === "USER" || userRole === "ADMIN" )) {
+    if (isAdminRoute && userRole === "ADMIN" || !isAdminRoute && (userRole === "USER" || userRole === "ADMIN")) {
         return <>{props.children}</>
     }
     else {
@@ -29,9 +29,11 @@ const ProtectedRoute = (props) => {
                     </RoleBaseRoute>
                 </>
                 :
-                <Navigate to="/" replace />}
+                 <Navigate to="/" replace />
 
-            
+            }
+
+
         </>
     )
 }
